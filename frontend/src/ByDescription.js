@@ -5,12 +5,13 @@ export default class ByDescription extends Component {
 	constructor() {
 		super();
 		this.state = {
-			searchResulte: "Not searched yet"
+			searchResulte: "Not searched yet",
+			searchingFor: ""
 		};
 	}
 
 	handleButtonClick = () => {
-		axios.get("/ByDescription").then(response => {
+		axios.post("/ByDescription", {searchingFor : this.searchingFor}).then(response => {
 			this.setState({
 				searchResulte: response.data
 			});
@@ -19,9 +20,15 @@ export default class ByDescription extends Component {
 
 	render() {
 		return(
+
 			<div>
-				<button onClick={this.handleButtonClick}>search</button>
-				<h1> result: {this.state.searchResulte}</h1>
+
+			<input type="text" value={this.state.searchingFor}/>
+			<br/>
+                
+			<button onClick={this.handleButtonClick}>search</button>
+
+				<h1> result: {this.state.searchingFor}</h1>
 			</div>
 		);
 	}

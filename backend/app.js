@@ -1,15 +1,21 @@
-const express = require('express')
+const handleDataBase = require('./handleDataBase.js');
 
+const express = require('express')
 const app = express()
 const port = 5000
 
+const attcks_folder = '../attack-pattern'
+
+//so it can  read the requests
 app.use(express.json());
 
 
-var myMap = new Map()
-myMap.set("name",new Map([["description", "loll"]]))
-myMap.get("name").set("aoo", "hi")
-console.log(myMap.get("name"))
+var allAttacks = new Map()
+handleDataBase.loadData(allAttacks, attcks_folder)
+console.log(handleDataBase.searchByDesc(allAttacks, ""))
+
+console.log(allAttacks)
+
 
 app.post('/byDescription', function(req, res) {
 	res.send(req.body["searchingFor"])

@@ -12,9 +12,9 @@ app.use(express.json());
 
 var allAttacks = new Map()
 handleDataBase.loadData(allAttacks, attcks_folder)
-console.log(handleDataBase.searchByDesc(allAttacks, ""))
+//console.log(handleDataBase.searchByDesc(allAttacks, ""))
 
-console.log(allAttacks)
+console.log(allAttacks, "---")
 
 
 app.post('/byDescription', function(req, res) {

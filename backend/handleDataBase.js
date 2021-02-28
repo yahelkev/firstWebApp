@@ -18,25 +18,24 @@ loads the data from the files to the dataBase
 function loadData(dataBase, folderName)
 {
 	var filesNames = fs.readdirSync(folderName)
-	fs.readFile(folderName + '\\' + filesNames[0], 'utf-8', (err, jsonString) => {
-		if (err) {
-			console.log(err)
+	var data = null
+	var fileContent = ''
+	try{
+		fileContent += fs.readFileSync(folderName + '\\' + filesNames[0], 'utf-8');
+	}
+	catch(err) {
+		console.log('Error reading file: ', err)
+	}
+	try{
+		data = JSON.parse(fileContent)
+	}
+	catch (err) {
+		console.log('Error parsing Json: ', err)
+	}
+		if("name" in data.objects[0])
+		{
+			dataBase.set(data.objects[0].name, getData(data.objects[0]))	
 		}
-		else{
-			try{
-				const data = JSON.parse(jsonString)
-				if("name" in data.objects[0])
-				{
-					dataBase.set("data.objects[0].name", getData())
-					console.log(data.objects[0].name, "hayy" , " *adedd*")		
-				}
-			}
-			catch (err) {
-				console.log('Error parsing Json', err)
-			}
-		}
-	})
-	//dataBase.set("name",getData())
 }
 /*
 serch in the dataBase and returns a string of all 

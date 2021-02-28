@@ -12,14 +12,13 @@ app.use(express.json());
 
 var allAttacks = new Map()
 handleDataBase.loadData(allAttacks, attcks_folder)
-//console.log(handleDataBase.searchByDesc(allAttacks, ""))
+console.log(handleDataBase.searchByDesc(allAttacks, ""))
 
-console.log(allAttacks, "---")
 
 
 app.post('/byDescription', function(req, res) {
-	res.send(req.body["searchingFor"])
-	console.log(req.body["searchingFor"])
+	res.send(handleDataBase.searchByDesc(allAttacks,(req.body["searchingFor"])))
+	console.log("Searching for: ", req.body["searchingFor"])
 })
 
 app.listen(port, () => {

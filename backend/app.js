@@ -12,9 +12,12 @@ app.use(express.json());
 
 var allAttacks = new Map()
 handleDataBase.loadData(allAttacks, attcks_folder)
-//console.log(handleDataBase.searchByDesc(allAttacks, ""))
-console.log(allAttacks.size)
 
+
+app.post('/infoOnAttack', function(req, res) {
+	res.send(handleDataBase.infoOnAttack(allAttacks,(req.body["searchingFor"])))
+	console.log("info Attack: ", req.body["searchingFor"])
+})
 
 app.post('/byDescription', function(req, res) {
 	res.send(handleDataBase.searchByDesc(allAttacks,(req.body["searchingFor"])))

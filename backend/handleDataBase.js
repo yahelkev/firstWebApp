@@ -4,6 +4,17 @@ const fs = require('fs')
 module.exports = {
 	loadData,
 	searchByDesc,
+	infoOnAttack,
+}
+
+function infoOnAttack(dataBase, attackName)
+{
+	var result = "NOT FOUND!"
+	if(true)
+	{
+		result = "yaaa"
+	}
+	return result
 }
 /*
 returns a map with the data it needs(description, phase_name...)
@@ -49,7 +60,6 @@ loads the data from the files to the dataBase
 function loadData(dataBase, folderName)
 {
 	var filesNames = fs.readdirSync(folderName)
-	console.log(filesNames.length)
 	var data = null
 	var fileContent = ''
 	for (var element of filesNames) {
@@ -68,7 +78,6 @@ function loadData(dataBase, folderName)
 		if("name" in data.objects[0])// if it dosent has a name its not usful
 		{
 			dataBase.set(data.objects[0].name, getData(data.objects[0]))	
-			console.log(filesNames.indexOf(element))
 		}
 	}
 }
@@ -76,7 +85,7 @@ function loadData(dataBase, folderName)
 serch in the dataBase and returns a string of all 
 the attacks that contains the 'searchfor' in the description
 */
-function searchByDesc(dataBase,searchfor)
+function searchByDesc(dataBase, searchfor)
 {
 	var result = ''
 	for (var entry of dataBase.entries())

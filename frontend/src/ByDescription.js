@@ -9,7 +9,14 @@ export default class ByDescription extends Component {
 			searchingFor: ""
 		}
 	}
-	sendSearchingMasseg = (event) => {
+
+	getInfoOnAttac = (event) => {
+		event.preventDefault()
+		axios.post("/infoOnAttack", { "searchingFor" : this.state.searchingFor }) .then(response =>{
+			this.setState({searchResulte: response.data});   
+		});
+	};
+		sendSearchingMasseg = (event) => {
 		event.preventDefault()
 		axios.post("/ByDescription", { "searchingFor" : this.state.searchingFor }) .then(response =>{
 			this.setState({searchResulte: response.data});   
@@ -28,8 +35,12 @@ export default class ByDescription extends Component {
 				<form onSubmit={this.sendSearchingMasseg}>
 					<p><input type="text" placeholder="Seach For" name='searchingFor' onChange={this.handleInputChanges} /></p>
 					<p><button>Search</button></p>
-				<h5> result: {this.state.searchResulte}</h5>
 				</form>
+				<form onSubmit={this.getInfoOnAttac}>
+					<p><input type="text" placeholder="info On" name='searchingFor' onChange={this.handleInputChanges} /></p>
+					<p><button>Get Info</button></p>
+				</form>
+				<h5> result: {this.state.searchResulte}</h5>
 			</div>
 		);
 	}

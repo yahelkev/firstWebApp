@@ -12,8 +12,8 @@ app.use(express.json());
 
 var allAttacks = new Map()
 handleDataBase.loadData(allAttacks, attcks_folder)
-console.log(handleDataBase.searchByDesc(allAttacks, ""))
-
+//console.log(handleDataBase.searchByDesc(allAttacks, ""))
+console.log(allAttacks.size)
 
 
 app.post('/byDescription', function(req, res) {

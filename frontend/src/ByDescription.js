@@ -5,15 +5,14 @@ export default class ByDescription extends Component {
 	constructor() {
 		super();
 		this.state = {
-			searchResulte: "",
+			searchResulte: "*PRESS ENTER/Search TO START*",
 			searchingFor: ""
 		}
 	}
 	sendSearchingMasseg = (event) => {
 		event.preventDefault()
 		axios.post("/ByDescription", { "searchingFor" : this.state.searchingFor }) .then(response =>{
-			console.log("resulte: " + response.data)
-			this.setState({searchResulte:response.data});   
+			this.setState({searchResulte: response.data});   
 		});
 	};
 
@@ -24,13 +23,12 @@ export default class ByDescription extends Component {
 		});
 	};
 	render() {
-
 		return(
 			<div>
 				<form onSubmit={this.sendSearchingMasseg}>
 					<p><input type="text" placeholder="Seach For" name='searchingFor' onChange={this.handleInputChanges} /></p>
 					<p><button>Search</button></p>
-				<h1> result: {this.state.searchResulte}</h1>
+				<h5> result: {this.state.searchResulte}</h5>
 				</form>
 			</div>
 		);

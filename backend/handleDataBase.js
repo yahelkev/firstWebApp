@@ -49,24 +49,28 @@ loads the data from the files to the dataBase
 function loadData(dataBase, folderName)
 {
 	var filesNames = fs.readdirSync(folderName)
+	console.log(filesNames.length)
 	var data = null
 	var fileContent = ''
-	try{
-		fileContent = fs.readFileSync(folderName + '\\' + filesNames[0], 'utf-8');
-	}
-	catch(err) {
-		console.log('Error reading file: ', err)
-	}
-	try{
-		data = JSON.parse(fileContent)
-	}
-	catch (err) {
-		console.log('Error parsing Json: ', err)
-	}
-		if("name" in data.objects[0])
+	for (var element of filesNames) {
+		try{
+			fileContent = fs.readFileSync(folderName + '\\' + element, 'utf-8');
+		}
+		catch(err) {
+			console.log('Error reading file: ', err)
+		}
+		try{
+			data = JSON.parse(fileContent)
+		}
+		catch (err) {
+			console.log('Error parsing Json: ', err)
+		}
+		if("name" in data.objects[0])// if it dosent has a name its not usful
 		{
 			dataBase.set(data.objects[0].name, getData(data.objects[0]))	
+			console.log(filesNames.indexOf(element))
 		}
+	}
 }
 /*
 serch in the dataBase and returns a string of all 
@@ -81,7 +85,7 @@ function searchByDesc(dataBase,searchfor)
 			value = entry[1];
 		if(value.get("description").toLowerCase().includes(searchfor.toLowerCase()))
 		{
-			result += key
+			result += key + ", "
 		}	
 	}
 	return result

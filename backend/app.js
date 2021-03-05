@@ -3,16 +3,19 @@ const handleDataBase = require('./handleDataBase.js');
 const express = require('express')
 const app = express()
 const port = 5000
-
 const attcks_folder = '../attack-pattern'
+
+handleDataBase.fs.truncate('DATA_BASE.db', 0, function(){})
+const Datastore = require('nedb'); 
+const allAttacks = new Datastore("DATA_BASE.db");
+allAttacks.loadDatabase();
+
 
 //so it can  read the requests
 app.use(express.json());
 
 
-var allAttacks = new Map()
 handleDataBase.loadData(allAttacks, attcks_folder)
-
 
 app.post('/infoOnAttack', function(req, res) {
 	res.send(handleDataBase.infoOnAttack(allAttacks,(req.body["searchingFor"])))
@@ -20,7 +23,10 @@ app.post('/infoOnAttack', function(req, res) {
 })
 
 app.post('/byDescription', function(req, res) {
-	res.send(handleDataBase.searchByDesc(allAttacks,(req.body["searchingFor"])))
+	handleDataBase.searchByDesc(allAttacks,(req.body["searchingFor"]), function(namelist){
+		res.send(namelist)
+	})	
+	//res.send(handleDataBase.searchByDesc(allAttacks,(req.body["searchingFor"])))
 	console.log("Searching for: ", req.body["searchingFor"])
 })
 

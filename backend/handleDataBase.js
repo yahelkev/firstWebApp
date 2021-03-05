@@ -5,14 +5,21 @@ module.exports = {
 	loadData,
 	searchByDesc,
 	infoOnAttack,
+	fs,
 }
 
 function infoOnAttack(dataBase, attackName)
 {
 	var result = "NOT FOUND!"
-	if(true)
+	if(dataBase.has(attackName))
 	{
-		result = "yaaa"
+		result = attackName + ", "
+		result += "id: " + dataBase.get(attackName).get("id") + " ; "
+		result += "x_mitre_platforms: " + dataBase.get(attackName).get("x_mitre_platforms") + " ; "
+		result += "x_mitre_detection: " + dataBase.get(attackName).get("x_mitre_detection") + " ; "
+		result += "phase_name: " + dataBase.get(attackName).get("phase_name") + " ; "
+		result += "description: " + dataBase.get(attackName).get("description") + "."
+
 	}
 	return result
 }
@@ -21,38 +28,45 @@ returns a map with the data it needs(description, phase_name...)
 */
 function getData(parseFileData)
 {
-	var dataMap = new Map()
+	var name_d = "NA"
+	var description_d = "NA"
+	var id_d = "NA"
+	var x_mitre_platforms_d = "NA"
+	var x_mitre_detection_d = "NA"
+	var phase_name_d = "NA"
+
+	if("name" in parseFileData)
+	{
+		name_d = parseFileData.name	
+	}
+
 	if("description" in parseFileData)
 	{
-		dataMap.set('description', parseFileData.description)	
+		description_d = parseFileData.description	
 	}
-	else {	dataMap.set('description', "NA")}
 
 	if("id" in parseFileData)
 	{
-		dataMap.set('id', parseFileData.id)	
+		id_d = parseFileData.id
 	}
-	else {	dataMap.set('id', "NA")	}
 	
 	if("x_mitre_platforms" in parseFileData)
 	{
-		dataMap.set('x_mitre_platforms', parseFileData.x_mitre_platforms)	
+		x_mitre_platforms_d = parseFileData.x_mitre_platforms	
 	}
-	else {	dataMap.set('x_mitre_platforms', "NA")	}
 	
 	if("x_mitre_detection" in parseFileData)
 	{
-		dataMap.set('x_mitre_detection', parseFileData.x_mitre_detection)	
+		x_mitre_detection_d =  parseFileData.x_mitre_detection
 	}
-	else {	dataMap.set('x_mitre_detection', "NA")	}
 
 	if("phase_name" in parseFileData)
 	{
-		dataMap.set('phase_name', parseFileData.phase_name)	
+		phase_name_d = parseFileData.phase_name
 	}
-	else {	dataMap.set('phase_name', "NA")	}
 
-	return dataMap
+	return { name: name_d , id: id_d, x_mitre_platforms: x_mitre_platforms_d,
+	x_mitre_detection: x_mitre_detection_d, phase_name: phase_name_d , description: description_d}
 }
 /*
 loads the data from the files to the dataBase
@@ -75,27 +89,26 @@ function loadData(dataBase, folderName)
 		catch (err) {
 			console.log('Error parsing Json: ', err)
 		}
-		if("name" in data.objects[0])// if it dosent has a name its not usful
-		{
-			dataBase.set(data.objects[0].name, getData(data.objects[0]))	
-		}
+		var newData = getData(data.objects[0])
+		dataBase.insert(newData, function (err, newDocs) {
+		});
 	}
 }
 /*
 serch in the dataBase and returns a string of all 
 the attacks that contains the 'searchfor' in the description
 */
-function searchByDesc(dataBase, searchfor)
+function searchByDesc(dataBase, searchfor, callBackFn)
 {
 	var result = ''
-	for (var entry of dataBase.entries())
-	{
-		var key = entry[0],
-			value = entry[1];
-		if(value.get("description").toLowerCase().includes(searchfor.toLowerCase()))
+	const regex = new RegExp(searchfor, 'i') // i for case insensitive
+	dataBase.find({ description: {$regex: regex} }, function (err, docs) {
+		var nameList = ""
+		for (var doc of docs)
 		{
-			result += key + ", "
-		}	
-	}
-	return result
+			//console.log(doc.name)
+			nameList += doc.name + ", "
+		}
+		callBackFn(nameList)
+	});
 }

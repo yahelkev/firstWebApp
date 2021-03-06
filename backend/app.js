@@ -17,8 +17,11 @@ app.use(express.json());
 
 handleDataBase.loadData(allAttacks, attcks_folder)
 
+
 app.post('/infoOnAttack', function(req, res) {
-	res.send(handleDataBase.infoOnAttack(allAttacks,(req.body["searchingFor"])))
+	handleDataBase.infoOnAttack(allAttacks,(req.body["searchingFor"]), function(attackInfo){
+		res.send(attackInfo)
+	})
 	console.log("info Attack: ", req.body["searchingFor"])
 })
 
@@ -26,7 +29,6 @@ app.post('/byDescription', function(req, res) {
 	handleDataBase.searchByDesc(allAttacks,(req.body["searchingFor"]), function(namelist){
 		res.send(namelist)
 	})	
-	//res.send(handleDataBase.searchByDesc(allAttacks,(req.body["searchingFor"])))
 	console.log("Searching for: ", req.body["searchingFor"])
 })
 

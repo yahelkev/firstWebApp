@@ -8,20 +8,25 @@ module.exports = {
 	fs,
 }
 
-function infoOnAttack(dataBase, attackName)
+function infoOnAttack(dataBase, attackName, callBackFn)
 {
-	var result = "NOT FOUND!"
-	if(dataBase.has(attackName))
-	{
-		result = attackName + ", "
-		result += "id: " + dataBase.get(attackName).get("id") + " ; "
-		result += "x_mitre_platforms: " + dataBase.get(attackName).get("x_mitre_platforms") + " ; "
-		result += "x_mitre_detection: " + dataBase.get(attackName).get("x_mitre_detection") + " ; "
-		result += "phase_name: " + dataBase.get(attackName).get("phase_name") + " ; "
-		result += "description: " + dataBase.get(attackName).get("description") + "."
-
-	}
-	return result
+	dataBase.find({ name: attackName}, function (err, docs) {
+		var result = "NOT FOUND!"
+		if(docs.length)
+		{
+			result = ""
+			for (var doc of docs)
+			{
+				result += "name: " + doc.name + " ; "
+				result += "id: " + doc.id + " ; "
+				result += "x_mitre_platforms: " + doc.x_mitre_platforms + " ; "
+				result += "x_mitre_detection: " + doc.x_mitre_detection + " ; "
+				result += "phase_name: " + doc.phase_name + " ; "
+				result += "description: " + doc.description + " _*END*_ "
+			}
+		}
+		callBackFn(result)
+	});
 }
 /*
 returns a map with the data it needs(description, phase_name...)
@@ -29,6 +34,7 @@ returns a map with the data it needs(description, phase_name...)
 function getData(parseFileData)
 {
 	var name_d = "NA"
+
 	var description_d = "NA"
 	var id_d = "NA"
 	var x_mitre_platforms_d = "NA"
@@ -106,7 +112,6 @@ function searchByDesc(dataBase, searchfor, callBackFn)
 		var nameList = ""
 		for (var doc of docs)
 		{
-			//console.log(doc.name)
 			nameList += doc.name + ", "
 		}
 		callBackFn(nameList)

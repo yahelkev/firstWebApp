@@ -106,13 +106,17 @@ the attacks that contains the 'searchfor' in the description
 */
 function searchByDesc(dataBase, searchfor, callBackFn)
 {
-	var result = ''
 	const regex = new RegExp(searchfor, 'i') // i for case insensitive
 	dataBase.find({ description: {$regex: regex} }, function (err, docs) {
 		var nameList = ""
 		for (var doc of docs)
 		{
 			nameList += doc.name + ", "
+		}
+		if(nameList === '')
+		{
+			callBackFn("NOT FOUND!")
+			return;
 		}
 		callBackFn(nameList)
 	});

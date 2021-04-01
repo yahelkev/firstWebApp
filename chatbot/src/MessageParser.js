@@ -13,7 +13,7 @@ class MessageParser {
       this.actionProvider.checkWithVirusTotal(lowerCaseMessage.substring(11))//passes only the signature
     }
     else if (lowerCaseMessage.includes("infoon: ")) {
-     this.actionProvider.infoOn(lowerCaseMessage.substring(8))//passes only the attack name
+     this.actionProvider.infoOn(message.substring(8))//passes only the attack name
     }
   }
 }

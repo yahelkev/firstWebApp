@@ -19,8 +19,23 @@ class ActionProvider {
 		});
   }
   checkWithVirusTotal(msg) {
-    const greetingMessage = this.createChatBotMessage(msg + " isnt good!")
-    this.updateChatbotState(greetingMessage)
+    axios.get('https://www.virustotal.com/api/v3/files/'.concat(msg),
+    { headers: { "x-apikey" : "cda2f8f7183e997d478c385a1e3002bce9ef1a08ed2ef497ceebec8236ff5441" ,
+    "Access-Control-Allow-Origin" : "*" }})
+    .then(response =>{
+	        console.log(response)		
+            this.updateChatbotState(this.createChatBotMessage(response.data.data.attributes.trusted_verdict.verdict));   
+	}).catch(err => {
+        if(err.response)
+        {
+               this.updateChatbotState(this.createChatBotMessage(err.response.data.error.message));   
+        }
+        else
+        {
+             this.updateChatbotState(this.createChatBotMessage("Resource not found!"));
+        }
+        console.log(err.response);
+    });
   }
   updateChatbotState(message) {
  

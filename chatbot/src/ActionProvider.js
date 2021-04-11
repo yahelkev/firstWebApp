@@ -1,6 +1,4 @@
-import React, { Component } from 'react';
 import axios from 'axios';
-
 
 class ActionProvider {
   constructor(createChatBotMessage, setStateFunc) {
@@ -21,7 +19,7 @@ class ActionProvider {
   checkWithVirusTotal(msg) {
     axios.get('https://www.virustotal.com/api/v3/files/'.concat(msg),
     { headers: { "x-apikey" : "cda2f8f7183e997d478c385a1e3002bce9ef1a08ed2ef497ceebec8236ff5441" ,
-    "Access-Control-Allow-Origin" : "*" }})
+    "Access-Control-Allow-Origin" : "https://www.virustotal.com/api/v3/files/" }})
     .then(response =>{
 	        console.log(response)		
             this.updateChatbotState(this.createChatBotMessage(response.data.data.attributes.trusted_verdict.verdict));   
@@ -38,12 +36,9 @@ class ActionProvider {
     });
   }
   updateChatbotState(message) {
- 
-    
    this.setState(prevState => ({
     	...prevState, messages: [...prevState.messages, message]
     }))
   }
 }
-
 export default ActionProvider
